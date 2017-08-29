@@ -1,40 +1,41 @@
-import "whatwg-fetch";
+import {FETCH_TASKS, ADD_TASK, UPDATE_TASK, DELETE_TASK} from "../actions/tasksAction";
 
-const tasks = (tasks = [], action) => {
+let initialState = [];
+
+const tasks = (state = initialState, action) => {
     switch(action.type) {
-        case "FETCH_TASKS":
-            tasks = action.payload;
+        case FETCH_TASKS:
+            state = action.payload;
             break;
-        case "ADD_TASK":
-            tasks = [...tasks, action.payload]
+        case ADD_TASK:
+            state = [...state, action.payload];
             break;
-        case "UPDATE_TASK":
-            tasks = tasks.map((item) => {
+        case UPDATE_TASK:
+            state = state.map((item) => {
                 if(item._id !== action.payload._id) {
                     return item;
                 }
-
                 return {
                     ...item,
                     ...action.payload
                 }
             });
             break;
-        case "DELETE_TASK":
+        case DELETE_TASK:
             if(action.payload.n === 1) {
                 let index = -1;
-                tasks.forEach((item, i) => {
+                state.forEach((item, i) => {
                     if(item._id === action.taskId) {
                         index = i;
                     }
                 });
                 if(index > -1) {
-                    tasks = [...tasks.slice(0, index), ...tasks.slice(index + 1)]
+                    state = [...state.slice(0, index), ...state.slice(index + 1)]
                 }
             }
             break;
     }
-    return tasks;
+    return state;
 };
 
 export default tasks;

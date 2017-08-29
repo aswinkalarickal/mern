@@ -1,4 +1,4 @@
-let mongojs = require('mongojs');
+const mongojs = require('mongojs');
 
 module.exports = {
 

@@ -4,10 +4,12 @@ import thunk from "redux-thunk";
 
 import tasks from "./reducers/tasksReducer";
 
+const reducers = combineReducers({
+    tasks: tasks
+});
+
 export default createStore(
-    combineReducers({
-        tasks
-    }),
+    reducers,
     {},
     applyMiddleware(logger, thunk)
 );

@@ -1,42 +1,59 @@
-let express = require('express');
-let path = require('path');
-let bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
 
-let port = 3000;
-
-let app = express();
-
-// View Engine
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-
-// Set Static Folder
-app.use(express.static(path.join(__dirname, 'src')));
-
-// Body Parser Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+const app = express();
 
 // Webpack
-let webpack = require('webpack');
-let webpackConfig = require('./webpack.config');
-let compiler = webpack(webpackConfig);
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const webpackConfig = require('./webpack.config');
+const compiler = webpack(webpackConfig);
 
-app.use(require('webpack-dev-middleware')(compiler, {
+app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
-    publicPath: webpackConfig.output.publicPath,
-    contentBase: 'src'
+    publicPath: webpackConfig.output.publicPath
 }));
 
-app.use(require('webpack-hot-middleware')(compiler));
+app.use(webpackHotMiddleware(compiler, {
+    log: console.log
+}));
+
+// Body Parser Middleware
+app.use(bodyParser.json({limit: '20mb'}));
+app.use(bodyParser.urlencoded({limit: '20mb', extended: false}));
+
+// Set Static Folder
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Render initial HTML
+const renderFullPage = () => {
+    return `
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>MERN Starter</title>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        </head>
+        <body>
+        <div id="app"></div>
+        <script src="/app/bundle.js"></script>
+        </body>
+        </html>
+    `;
+};
 
 // Routes
-let index = require('./routes/index');
-let tasks = require('./routes/tasks');
+const api = require('./routes/api');
 
-app.use('/', index);
-app.use('/api', tasks);
+app.use('/api', api);
+app.use('*', (req, res) => {
+    res.end(renderFullPage());
+});
+
+const port = 3000;
 
 app.listen(port, () => {
     console.log('Server started on port ' + port);

@@ -1,12 +1,13 @@
-let webpack = require('webpack');
-let path = require('path');
+const webpack = require('webpack');
+const path = require('path');
 
-let DIST_DIR = path.resolve(__dirname, 'dist');
-let SRC_DIR = path.resolve(__dirname, 'src');
+const DIST_DIR = path.resolve(__dirname, 'dist');
+const SRC_DIR = path.resolve(__dirname, 'src');
 
-let config = {
+const config = {
     entry: [
-        'webpack-hot-middleware/client?reload=true',
+        'webpack/hot/dev-server',
+        'webpack-hot-middleware/client',
         SRC_DIR + '/app/index.js'
     ],
     output: {

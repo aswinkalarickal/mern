@@ -1,8 +1,8 @@
-let mongojs = require('mongojs');
-let config = require('./config');
-let db = mongojs(config.MONGODB_URL);
+const mongojs = require('mongojs');
+const config = require('./config');
+const db = mongojs(config.MONGODB_URL);
 
-let COLLECTIONS = {
+const COLLECTIONS = {
     dbTasks: {
         db: 'Tasks',
         indexes: []

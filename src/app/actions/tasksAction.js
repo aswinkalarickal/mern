@@ -1,5 +1,10 @@
 import "whatwg-fetch";
 
+export const FETCH_TASKS = "FETCH_TASKS";
+export const ADD_TASK = "ADD_TASK";
+export const UPDATE_TASK = "UPDATE_TASK";
+export const DELETE_TASK = "DELETE_TASK";
+
 export function fetchTasks() {
     return dispatch => {
         fetch("/api/tasks", {
@@ -8,7 +13,7 @@ export function fetchTasks() {
             return response.json();
         }).then((json) => {
             dispatch({
-                type: "FETCH_TASKS",
+                type: FETCH_TASKS,
                 payload: json
             });
         });
@@ -17,7 +22,7 @@ export function fetchTasks() {
 
 export function addTask(title) {
     return dispatch => {
-        fetch("/api/task", {
+        fetch("/api/tasks", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -29,7 +34,7 @@ export function addTask(title) {
             return response.json();
         }).then((json) => {
             dispatch({
-                type: "ADD_TASK",
+                type: ADD_TASK,
                 payload: json
             });
         });
@@ -38,7 +43,7 @@ export function addTask(title) {
 
 export function updateTask(taskId, isDone) {
     return dispatch => {
-        fetch("/api/task/" + taskId, {
+        fetch("/api/tasks/" + taskId, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -50,7 +55,7 @@ export function updateTask(taskId, isDone) {
             return response.json();
         }).then((json) => {
             dispatch({
-                type: "UPDATE_TASK",
+                type: UPDATE_TASK,
                 payload: json
             });
         });
@@ -59,7 +64,7 @@ export function updateTask(taskId, isDone) {
 
 export function deleteTask(taskId) {
     return dispatch => {
-        fetch("/api/task/" + taskId, {
+        fetch("/api/tasks/" + taskId, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json'
@@ -68,7 +73,7 @@ export function deleteTask(taskId) {
             return response.json();
         }).then((json) => {
             dispatch({
-                type: "DELETE_TASK",
+                type: DELETE_TASK,
                 payload: json,
                 taskId: taskId
             });

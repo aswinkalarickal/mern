@@ -1,46 +1,24 @@
 import React from "react";
 import {connect} from "react-redux";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 
-import {TaskAddForm} from "../components/TaskAddForm";
-import {Tasks} from "../components/Tasks";
-import {fetchTasks, addTask, updateTask, deleteTask} from "../actions/tasksAction";
+import {Root} from "../components/Root";
+import {Home} from "../components/Home";
+import TaskList from "../components/TaskList";
+import {SamplePage} from "../components/SamplePage";
 
 class App extends React.Component {
-    componentWillMount() {
-        this.props.fetchTasks();
-    }
-
     render() {
         return (
-            <div className="container">
-                <h1>Tasks List</h1>
-                <hr/>
-                <TaskAddForm onTaskSubmit={(title) => this.props.addTask(title)}/>
-                <Tasks tasks={this.props.tasks} onStatusUpdate={(taskId, isDone) => this.props.updateTask(taskId, isDone)} onDeleteTask={(taskId) => this.props.deleteTask(taskId)}/>
-            </div>
+            <Router>
+                <Root>
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/todo/" component={TaskList}/>
+                    <Route path="/sample/" component={SamplePage}/>
+                </Root>
+            </Router>
         );
     }
 }
 
-const mapStateToProps = (tasks) => {
-    return tasks;
-};
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchTasks: () => {
-            dispatch(fetchTasks());
-        },
-        addTask: (title) => {
-            dispatch(addTask(title));
-        },
-        updateTask: (taskId, isDone) => {
-            dispatch(updateTask(taskId, isDone));
-        },
-        deleteTask: (taskId) => {
-            dispatch(deleteTask(taskId));
-        }
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(state => {return state;}, {})(App);
